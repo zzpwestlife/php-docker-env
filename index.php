@@ -1,2 +1,4 @@
 <?php
-phpinfo();
+echo 'php-env';
+die;
+// phpinfo();
