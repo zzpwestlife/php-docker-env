@@ -1,4 +1,6 @@
 <?php
-echo 'php-env';
+echo 'index';
+$a = 1;
+$b = 2;
+echo $a, $b;
 die;
-// phpinfo();

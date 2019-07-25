@@ -1,5 +1,6 @@
 {
     "require": {
-        "grpc/grpc": "^1.22"
+        "grpc/grpc": "^1.22",
+        "hprose/hprose": "^2.0"
     }
 }

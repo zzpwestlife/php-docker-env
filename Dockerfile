@@ -74,14 +74,7 @@ RUN cd nginx && ./configure \
     && make install \
     && mkdir -p /var/cache/nginx/
 
-# install extension
-#RUN docker-php-ext-install zip \
-#    && docker-php-ext-install mcrypt \
-#    && docker-php-ext-install intl \
-#    && docker-php-ext-install mbstring \
-#    && docker-php-ext-install pdo_mysql \
-#    && docker-php-ext-install pcntl \
-#    && docker-php-ext-install bcmath
+RUN cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
 
 # composer
 RUN curl -sS https://getcomposer.org/installer | php \
@@ -92,10 +85,32 @@ RUN wget https://phar.phpunit.de/phpunit-8.2.5.phar \
     && chmod +x phpunit-8.2.5.phar \
     && mv phpunit-8.2.5.phar /usr/bin/phpunit
 
-RUN cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
 # grpc
 RUN yes | pecl install grpc \
     && echo "extension=grpc.so" >> /usr/local/etc/php/php.ini
+
+# swoole
+RUN yes | pecl install swoole \
+    && echo 'extension=swoole.so' >> /usr/local/etc/php/php.ini
+
+# xdebug 重点看这里即可
+RUN wget http://pecl.php.net/get/xdebug-2.7.2.tgz \
+    && pecl install xdebug-2.7.2.tgz \
+    && rm -f xdebug-2.7.2.tgz \
+    && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.remote_enable=on" >> /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.remote_autostart=on" >> /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.remote_port=9002" >> /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.remote_host=docker.for.mac.localhost" >> /usr/local/etc/php/conf.d/xdebug.ini
+
+# install extension
+# RUN docker-php-ext-install zip \
+#    && docker-php-ext-install mcrypt \
+#    && docker-php-ext-install intl \
+#    && docker-php-ext-install mbstring \
+#    && docker-php-ext-install pdo_mysql \
+#    && docker-php-ext-install pcntl \
+#    && docker-php-ext-install bcmath
 
 RUN apt-get purge -y g++ \
     && apt-get autoremove -y \

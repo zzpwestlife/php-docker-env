@@ -6,5 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Hprose\\' => array($vendorDir . '/hprose/hprose/src/Hprose'),
     'Grpc\\' => array($vendorDir . '/grpc/grpc/src/lib'),
 );
